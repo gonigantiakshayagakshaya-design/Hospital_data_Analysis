@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hospital Management Dashboard</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #263445;
+        }
+
+        header {
+            background: #163b65;
+            color: white;
+            padding: 25px 35px;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #d8e6f5;
+        }
+
+        .container {
+            padding: 25px;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .section-title {
+            margin: 25px 0 15px;
+            color: #163b65;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #dce3eb;
+            border-left: 5px solid #2474bd;
+        }
+
+        .card h3 {
+            color: #65758b;
+            font-size: 16px;
+        }
+
+        .card h2 {
+            margin-top: 12px;
+            color: #163b65;
+            font-size: 27px;
+        }
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .menu a {
+            background: white;
+            color: #163b65;
+            text-decoration: none;
+            padding: 22px 12px;
+            text-align: center;
+            border-radius: 12px;
+            font-weight: bold;
+            box-shadow: 0 3px 10px #dce3eb;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #163b65;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #dce3eb;
+        }
+
+        .search-box input {
+            padding: 11px;
+            width: 250px;
+            max-width: 100%;
+            border: 1px solid #ccd5df;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 11px 18px;
+            background: #2474bd;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #163b65;
+        }
+
+        .table-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 3px 10px #dce3eb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th, td {
+            padding: 13px;
+            border-bottom: 1px solid #e1e7ee;
+            text-align: left;
+        }
+
+        th {
+            background: #163b65;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f0f6fc;
+        }
+
+        .graphs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .graph-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #dce3eb;
+            overflow: hidden;
+        }
+
+        .graph-card img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            margin-top: 30px;
+            background: #163b65;
+            color: white;
+        }
+
+        @media(max-width: 900px) {
+            .dashboard, .menu {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 600px) {
+            .dashboard, .menu, .graphs {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🏥 Hospital Management System</h1>
+    <p>Patient Data Analysis and Management Dashboard</p>
+</header>
+
+<div class="container">
+
+    <!-- DASHBOARD STATISTICS -->
+
+<h2>Hospital Management Features</h2>
+
+<div style="display:flex; gap:15px; flex-wrap:wrap; margin:20px 0;">
+
+    <a href="{{ url_for('add_patient') }}">Add Patient</a>
+
+    <a href="{{ url_for('update_patient') }}">Update Patient</a>
+
+    <a href="{{ url_for('delete_patient') }}">Delete Patient</a>
+
+
+
+    <a href="{{ url_for('download_pdf') }}">Download PDF</a>
+
+
+
+</div>
+
+<style>
+    .dashboard + h2 {
+        margin-top: 30px;
+    }
+
+    a {
+        background: #1565c0;
+        color: white;
+        padding: 12px 18px;
+        text-decoration: none;
+        border-radius: 8px;
+        display: inline-block;
+    }
+
+    a:hover {
+        background: #0d47a1;
+    }
+</style>
+
+
+    <h2 class="section-title">Dashboard Overview</h2>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h3>Total Patients</h3>
+            <h2>{{ total_patients }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Male Patients</h3>
+            <h2>{{ male_patients }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Female Patients</h3>
+            <h2>{{ female_patients }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Total Revenue</h3>
+            <h2>₹{{ total_revenue }}</h2>
+        </div>
+
+    </div>
+
+
+    <!-- MANAGEMENT FEATURES -->
+
+    <h2 class="section-title">Patient Management</h2>
+
+    <div class="menu">
+
+        <a href="{{ url_for('add_patient') }}">
+            ➕<br><br>Add Patient
+        </a>
+
+        <a href="{{ url_for('update_patient') }}">
+            ✏️<br><br>Update Patient
+        </a>
+
+        <a href="{{ url_for('delete_patient') }}">
+            🗑️<br><br>Delete Patient
+        </a>
+
+        <a href="#search">
+            🔍<br><br>Search Patient
+        </a>
+
+    </div>
+
+
+    <!-- OTHER FEATURES -->
+
+    <h2 class="section-title">Other Services</h2>
+
+    <div class="menu">
+
+
+
+        <a href="#graphs">
+            📊<br><br>Analytics & Graphs
+        </a>
+
+        <a href="{{ url_for('download_pdf') }}">
+            📄<br><br>Download PDF
+        </a>
+
+
+
+    </div>
+
+
+    <!-- SEARCH PATIENT -->
+
+    <h2 class="section-title" id="search">
+        Search Patient Details
+    </h2>
+
+    <div class="search-box">
+
+        <form action="{{ url_for('search') }}" method="POST">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Enter patient ID, name or disease"
+                required
+            >
+
+            <button type="submit">Search Patient</button>
+
+        </form>
+
+    </div>
+
+
+    <!-- PATIENT RECORDS -->
+
+    <h2 class="section-title">Patient Records</h2>
+
+    <div class="table-box">
+
+        <table>
+
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Disease</th>
+                <th>Department</th>
+                <th>Bill</th>
+            </tr>
+
+            {% for patient in patients %}
+
+            <tr>
+                <td>{{ patient.patient_id }}</td>
+                <td>{{ patient.name }}</td>
+                <td>{{ patient.age }}</td>
+                <td>{{ patient.gender }}</td>
+                <td>{{ patient.disease }}</td>
+                <td>{{ patient.department }}</td>
+                <td>₹{{ patient.bill }}</td>
+            </tr>
+
+            {% else %}
+
+            <tr>
+                <td colspan="7">No patient records found.</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+
+    <!-- ANALYTICS GRAPHS -->
+
+    <h2 class="section-title" id="graphs">
+        Hospital Data Analytics
+    </h2>
+
+    <div class="graphs">
+
+        <div class="graph-card">
+            <h3>Disease-wise Patient Analysis</h3>
+            <br>
+            <img
+                src="{{ url_for('static', filename='disease_chart.png') }}"
+                alt="Disease Analysis Graph"
+            >
+        </div>
+
+        <div class="graph-card">
+            <h3>Department-wise Patient Analysis</h3>
+            <br>
+            <img
+                src="{{ url_for('static', filename='department_chart.png') }}"
+                alt="Department Analysis Graph"
+            >
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    <p>Hospital Patient Data Analysis System | Developed using Python, Flask, MySQL</p>
+</footer>
+
+</body>
+</html>
